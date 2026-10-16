@@ -17,8 +17,17 @@ POLICY = """Refund policy:
 - Final-sale items are never refundable.
 """
 
-# TODO: Fill this in! Encourage step-by-step reasoning, ending with DECISION: YES/NO.
-YOUR_SYSTEM_PROMPT = ""
+YOUR_SYSTEM_PROMPT = """You decide whether an order is eligible for a refund under the policy below.
+Think step by step. Check each rule in order and write one short line per rule:
+1. Days since purchase: is it 30 or fewer?
+2. Condition: is the item unused / in original condition? If the order does not mention
+   the item being used or damaged, treat it as unused.
+3. Final sale: is it a final-sale item? If the order does not say so, it is not final sale.
+The order is eligible only if all three rules pass.
+
+The last line of your answer must be exactly one of these, with nothing after it:
+DECISION: YES
+DECISION: NO"""
 
 CASES = [
     ("Bought 10 days ago, unused, not final sale.", "YES"),
