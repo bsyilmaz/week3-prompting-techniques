@@ -58,7 +58,7 @@ labelled correctly: "I was charged but never got a receipt email." → `billing`
 jeans for a bigger size?" → `returns`, "Your website won't load on Safari." → `technical`, "Do
 you sell gift cards?" → `other`.
 
-**What I learned:** <!-- one line, written by me -->
+**What I learned:** Label definitions, 5 examples, and a "reply with one word" instruction moved the model from long customer-service replies to a one-word label (0/4 → 4/4).
 
 ## 2. Chain-of-thought: refund eligibility
 
@@ -112,7 +112,7 @@ showed it was not trustworthy, so I kept iterating:
 | v4      | Each line must state the fact first, plus a worked example   | 3/3   | Correct reasoning on every case except the boundary: "30 is not 30 or fewer -> FAIL"   |
 | v5      | Explicit boundary: "exactly 30 days still PASSES"            | 3/3   | Correct on 29, 30, 31 days, used items, and final-sale items                            |
 
-**What I learned:** <!-- one line, written by me -->
+**What I learned:** A single required `DECISION` line fixed the format, but making the reasoning correct as well required having the model state the facts first and saying the "exactly 30 days still passes" boundary explicitly.
 
 ## 3. Tool calling: order lookup
 
@@ -143,7 +143,7 @@ matter for what the check does not test, such as when to call the tool and what 
 have. The reply above comes from sending the tool result back to the model, which the starter does
 not do.
 
-**What I learned:** <!-- one line, written by me -->
+**What I learned:** Because the model made the right call even with empty descriptions, the prompt did not change the result in a measurable way; the descriptions I wrote mostly served as a safeguard for edge cases.
 
 ## 4. RAG: answers grounded in the help center
 
@@ -183,8 +183,8 @@ its long reply. It then failed the CEO question only because it wrote "can't" wh
 for "cannot". After the change, the answers quote the help center, and "Do you offer gift wrapping?"
 (not in the help center) also gets "I don't know".
 
-**What I learned:** <!-- one line, written by me -->
+**What I learned:** Without context the model guessed from general knowledge; with the retriever and the "use only the Context" instruction it passed the facts on exactly and said "I don't know" for the question it could not answer (2/3 → 3/3).
 
 ## What I learned across all four
 
-<!-- closing paragraph, written by me: why LLMs are good at structured tasks and where they need scaffolding -->
+Across all four techniques, the model had no trouble with structured tasks once the shape of the output was clearly defined. It picked up the pattern from a few examples and classified correctly, made the right tool call even with empty descriptions, and kept to the requested format. Where it struggled were things it could not know on its own or would not do by itself. It got numeric boundaries like "does 30 days count" wrong, it guessed instead of saying it did not know when it lacked the information, and when two format instructions conflicted it dropped one of them (the `DECISION` line disappeared in CoT v2). So scaffolding removes ambiguity more than it gives the model a new ability: examples fix the shape of the output, the retriever fixes the information, and explicit rules fix the boundaries. Finally, a passing test does not mean correct reasoning: in CoT the test passed in three versions while the reasoning was wrong, and the tool calling test did not measure the quality of the prompt at all.
