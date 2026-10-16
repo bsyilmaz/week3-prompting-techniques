@@ -18,15 +18,27 @@ POLICY = """Refund policy:
 """
 
 YOUR_SYSTEM_PROMPT = """You decide whether an order is eligible for a refund under the policy below.
-Think step by step. Check each rule in order and write one short line per rule:
-1. Days since purchase: is it 30 or fewer?
-2. Condition: is the item unused / in original condition? If the order does not mention
-   the item being used or damaged, treat it as unused.
-3. Final sale: is it a final-sale item? If the order does not say so, it is not final sale.
-The order is eligible only if all three rules pass.
+Think step by step. Check each rule in order. For each rule, write one short line that
+states the fact from the order and ends with PASS or FAIL:
+1. Time: PASS if the item was bought 0 to 30 days ago (exactly 30 days still PASSES),
+   FAIL if it was bought 31 or more days ago.
+2. Condition: PASS if the item is unused / in original condition, otherwise FAIL. If the
+   order does not mention the item being used or damaged, treat it as unused.
+3. Final sale: FAIL if the item is a final-sale item, otherwise PASS. If the order does not
+   say so, it is not final sale.
+Each rule line must first state the fact (for example the number of days), then compare it
+to the rule, then give PASS or FAIL.
 
-The last line of your answer must be exactly one of these, with nothing after it:
-DECISION: YES
+After the three rule lines, finish with exactly one final line and nothing after it:
+DECISION: YES   (if all three rules PASS)
+DECISION: NO    (if any rule FAILS)
+Always write the DECISION line, for both YES and NO.
+
+Example of the format (a different order):
+Order: Bought 12 days ago, the item has a stain from use.
+1. Time: bought 12 days ago; 12 is 30 or fewer -> PASS
+2. Condition: it has a stain from use, so it is not unused -> FAIL
+3. Final sale: the order does not say final sale -> PASS
 DECISION: NO"""
 
 CASES = [
