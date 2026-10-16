@@ -1,5 +1,8 @@
 # Starter — Prompting Techniques
 
+> **Week 3 submission:** all four checks pass with `llama3.1:8b`. Prompts, sample outputs, and
+> what I learned are in [writeup.md](writeup.md).
+
 Fill-in-the-prompt stubs for four techniques. You only edit the `TODO` parts (the
 prompt, and the retriever in `rag.py`).
 
